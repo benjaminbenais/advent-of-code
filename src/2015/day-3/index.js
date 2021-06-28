@@ -6,15 +6,10 @@ const directions = puzzleInput.split('');
 let x = 0;
 let y = 0;
 
-const visitedLocations = {};
+const visitedLocations = new Set();
 
 directions.forEach((direction) => {
-  const key = `${x},${y}`;
-  const count = visitedLocations[key];
-
-  if (count !== 1) {
-    visitedLocations[key] = 1;
-  }
+  visitedLocations.add(`${x},${y}`);
 
   if (direction === '^') {
     y += 1;
@@ -27,5 +22,5 @@ directions.forEach((direction) => {
   }
 });
 
-const result = Object.keys(visitedLocations).length;
+const result = visitedLocations.size;
 console.log('result :', result);

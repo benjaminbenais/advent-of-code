@@ -26,5 +26,8 @@
       "eslint",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "crypto-js": "^4.0.0"
   }
 }

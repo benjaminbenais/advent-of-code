@@ -2,31 +2,54 @@ const fs = require('fs');
 
 const puzzleInput = fs.readFileSync('./input.txt', 'utf-8');
 
+// Returns the number of vowels in a string (minus the 'y')
 const vowelCount = (str) => {
-  const vowelRegex = /[aeiou]/;
-  return str.split('').filter((char) => vowelRegex.test(char)).length;
+  const regex = /[aeiou]/;
+  return str.split('').filter((char) => regex.test(char)).length;
 };
 
+// Returns true if a string contains a character that is repeated twice in a row
 const hasRepeatingChars = (str) => {
   const splittedStr = str.split('');
-  return splittedStr.some((char, i) => char === splittedStr[i - 1]);
+  return splittedStr.some((char, i) => char === splittedStr[i + 1]);
 };
 
-const hasForbiddenChars = (str, regex) => regex.test(str);
+// Returns true if a string contains the forbidden characters
+const hasForbiddenChars = (str) => {
+  const regex = /ab|cd|pq|xy/;
+  return regex.test(str);
+};
 
-// Contains at least three vowels (aeiou only)
-// It does not contain the strings ab, cd, pq, or xy
-// It contains at least one letter that appears twice in a row
-const isNiceString = (str) =>
-  vowelCount(str) >= 3 &&
-  hasRepeatingChars(str) &&
-  !hasForbiddenChars(str, /ab|cd|pq|xy/);
+// Returns true if a string contains a pair of characters that is repeated at least twice
+const hasRepeatingPairs = (str) => {
+  for (let i = 0; i < str.length - 1; i++) {
+    const pair = str.substring(i, i + 2);
+    const rest = str.substring(i + 2);
+    if (rest.includes(pair)) {
+      return true;
+    }
+  }
 
-const getNiceStrings = (strings) => {
+  return false;
+};
+
+// Returns true if a string contains a character that is repeated at least twice but are not next to each other
+const hasRepeatingCharsBetween = (str) => {
+  const splittedStr = str.split('');
+  return splittedStr.some((char, i) => char === splittedStr[i + 2]);
+};
+
+const isNiceString1 = (str) =>
+  vowelCount(str) >= 3 && hasRepeatingChars(str) && !hasForbiddenChars(str);
+
+const isNiceString2 = (str) =>
+  hasRepeatingPairs(str) && hasRepeatingCharsBetween(str);
+
+const getNiceStrings = (strings, condition) => {
   const niceStrings = [];
 
   strings.forEach((str) => {
-    if (isNiceString(str)) {
+    if (condition(str)) {
       niceStrings.push(str);
     }
   });
@@ -34,7 +57,10 @@ const getNiceStrings = (strings) => {
   return niceStrings;
 };
 
-const niceStrings = getNiceStrings(puzzleInput.split('\n'));
+const niceStrings1 = getNiceStrings(puzzleInput.split('\n'), isNiceString1);
+const result1 = niceStrings1.length;
+console.log('result1 :', result1);
 
-const result = niceStrings.length;
-console.log('result :', result);
+const niceStrings2 = getNiceStrings(puzzleInput.split('\n'), isNiceString2);
+const result2 = niceStrings2.length;
+console.log('result2 :', result2);

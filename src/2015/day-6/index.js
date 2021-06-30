@@ -85,6 +85,8 @@ const processInstruction = (instruction) => {
     action = `${splittedInstruction[0]}_${splittedInstruction[1]}`;
     from = processCoordinate(splittedInstruction[2]);
     to = processCoordinate(splittedInstruction[splittedInstruction.length - 1]);
+  } else {
+    console.log('instruction :', instruction);
   }
 
   return { action, from, to };
@@ -98,8 +100,7 @@ const processInstructions = (instructions, grid) => {
     const { action, from, to } = processInstruction(instruction);
     const positions = getPositionsWithinRange(from, to);
 
-    positions.forEach((position) => {
-      const [x, y] = position;
+    positions.forEach(([x, y]) => {
       if (action === 'turn_on') {
         gridCopy[x][y] = 1;
       } else if (action === 'turn_off') {
@@ -113,9 +114,42 @@ const processInstructions = (instructions, grid) => {
   return gridCopy;
 };
 
+// eslint-disable-next-line no-shadow
+const processInstructions2 = (instructions, grid) => {
+  const gridCopy = [...grid];
+
+  instructions.forEach((instruction) => {
+    const { action, from, to } = processInstruction(instruction);
+    const positions = getPositionsWithinRange(from, to);
+
+    positions.forEach(([x, y]) => {
+      const currentBrightness = gridCopy[x][y] || 0;
+      if (action === 'turn_on') {
+        gridCopy[x][y] = currentBrightness + 1;
+      } else if (action === 'turn_off' && currentBrightness > 0) {
+        gridCopy[x][y] = currentBrightness - 1;
+      } else if (action === 'toggle') {
+        gridCopy[x][y] = currentBrightness + 2;
+      }
+    });
+  });
+
+  return gridCopy;
+};
+
 const grid = initGrid();
 
 const updatedGrid = processInstructions(instructions, grid);
 const formattedGrid = updatedGrid.flat().filter((pos) => pos === 1);
-const result = formattedGrid.length;
-console.log('result :', result);
+const result1 = formattedGrid.length;
+console.log('result1 :', result1);
+
+const updatedGrid2 = processInstructions2(instructions, grid);
+const result2 = updatedGrid2.flat().reduce((acc, curr) => {
+  if (curr > 0) {
+    return acc + curr;
+  }
+  return acc;
+}, 0);
+
+console.log('result2 :', result2);

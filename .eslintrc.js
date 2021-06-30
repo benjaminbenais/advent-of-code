@@ -12,6 +12,7 @@ module.exports = {
   },
   rules: {
     'no-console': 0,
-    'no-plusplus': 0
+    'no-plusplus': 0,
+    'prefer-destructuring': 0
   }
 };

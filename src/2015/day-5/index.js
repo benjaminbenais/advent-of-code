@@ -2,7 +2,11 @@ const fs = require('fs');
 
 const puzzleInput = fs.readFileSync('./input.txt', 'utf-8');
 
-// Returns the number of vowels in a string (minus the 'y')
+/**
+ * Returns the number of vowels in a string (minus the 'y')
+ * @param {string} str - The string to check
+ * @return {number} n - Number of vowels
+ */
 const vowelCount = (str) => {
   const regex = /[aeiou]/;
   return str.split('').filter((char) => regex.test(char)).length;

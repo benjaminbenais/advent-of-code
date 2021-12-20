@@ -52,22 +52,31 @@ const initMap = (instructions) => {
 };
 
 const processInput = (instructions) => {
-  // eslint-disable-next-line
   const map = initMap(instructions);
 
   instructions.forEach(({ from, to }) => {
+    // If from.x is equal to to.x or from.y is equal to to.y
+    // It mean the path is a row or a line
     if (from.x === to.x || from.y === to.y) {
-      console.log('from :', from);
-      console.log('to :', to);
+      if (from.x !== to.x) {
+        for (let i = from.x; i <= to.x; i++) {
+          map[from.y][i] += 1;
+        }
+      }
 
-      const xPath = to.x - from.x;
-      console.log('xPath :', xPath);
-
-      for (let i = 0; i < xPath; i++) {
-        //
+      if (from.y !== to.y) {
+        for (let i = from.y; i <= to.y; i++) {
+          map[i][from.x] += 1;
+        }
       }
     }
   });
+
+  return map.reduce((total, row) => {
+    return (
+      total + row.reduce((count, point) => (point > 1 ? count + 1 : count), 0)
+    );
+  }, 0);
 };
 
 const result = processInput(

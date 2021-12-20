@@ -76,6 +76,20 @@ const processInput = (instructions) => {
           map[i][fromX] += 1;
         }
       }
+    } else {
+      // Process diagonal lines
+      const tmpInstruction = instruction.sort((a, b) => a[0] - b[0]);
+      let tmpY = tmpInstruction[0][1];
+
+      for (let i = tmpInstruction[0][0]; i <= tmpInstruction[1][0]; i++) {
+        map[tmpY][i] += 1;
+
+        if (tmpInstruction[0][1] < tmpInstruction[1][1]) {
+          tmpY += 1;
+        } else {
+          tmpY -= 1;
+        }
+      }
     }
   });
 
